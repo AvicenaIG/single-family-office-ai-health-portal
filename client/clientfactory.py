@@ -7,14 +7,34 @@ from qa.purpose_type import userPurposeType
 
 
 class Clientfactory:
-    pass  # TODO: implement
+    # 初始化client字典，使用环境变量中的LLM_BASE_URL
+    map_client_dict = {get_env_value("LLM_BASE_URL")}
 
+    # 初始化client的url和apikey，使用环境变量中的LLM_BASE_URL，LLM_API_KEY
     def __init__(self):
-        pass  # TODO: implement
+        self._client_url = get_env_value("LLM_BASE_URL")
+        self._api_key = get_env_value("LLM_API_KEY")
 
     def get_client(self):
-        pass  # TODO: implement
+        """
+        获取默认的客户端实例
+        """
+        return OurAPI()  # 返回我们自己的API客户端实例
 
+    @staticmethod
     def get_special_client(client_type: str):
-        pass  # TODO: implement
+        """
+        根据客户端类型获取特定的客户端实例
+        :param client_type: 客户端类型，字符串类型
+        :return: 对应的客户端实例
+        """
+        print("get_special_client")
+        if client_type == userPurposeType.ImageGeneration:
+            return Image_generate_client
+        if client_type == userPurposeType.ImageDescribe:
+            return Image_describe_client
+        if client_type == userPurposeType.Video:
+            return Video_generate_client
 
+        # 默认情况下使用文本生成模型
+        return OurAPI()
